@@ -29,6 +29,14 @@ const userSchema = new Schema(
     avatarURL: {
       type: String,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -54,10 +62,17 @@ const updateSubscriptionSchema = Joi.object({
     }),
 });
 
+const verifyEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    "any.required": "missing required field email",
+  }),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
   updateSubscriptionSchema,
+  verifyEmailSchema,
 };
 // створюємо модель: викликаємо функцію модал, вказуємо назву колекції,і назву монгус схеми
 const User = model("user", userSchema);
